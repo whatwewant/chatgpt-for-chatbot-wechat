@@ -18,8 +18,6 @@
 ## 预览
 ![](./docs/assets/images/chatgpt.chat.group.png)
 
-![](./docs/assets/images/chatgpt.chat.p2p.png)
-
 ## 功能支持
 
 * [x] 支持长对话，自动联系上下文
