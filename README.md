@@ -12,9 +12,8 @@
   * [二进制](#二进制)
   * [Docker Compose](#docker-compose)
   * [二次开发](#二次开发)
-* [五、微信应用配置和 OpenAI 相关步骤](#微信应用配置和-openai-相关步骤)
-* [六、更多交流](#更多交流)
-* [七、相关资源](#相关资源)
+* [五、更多交流](#更多交流)
+* [六、相关资源](#相关资源)
 
 ## 预览
 ![](./docs/assets/images/chatgpt.chat.group.png)
