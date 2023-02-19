@@ -27,16 +27,17 @@
 * [x] 支持群聊
   * [x] 支持 @ 机器人回复
   * [x] 也支持命令（`/chatgpt`）触发，格式：`/chatgpt 你的问题`
-* [ ] 支持配置启动反向代理
-  * ngrok
-  * [cpolar](https://dashboard.cpolar.com/)
-  * [natapp](https://natapp.cn/)
 * [ ] 支持二次开发，快速接入企业现有应用
   * Go 开发框架
     * [x] [Go-Zoox](https://github.com/go-zoox/zoox)
     * [ ] Gin
     * [ ] Echo
     * [ ] Go-Zero
+
+## 项目特点
+* 基于 [OpenAI GPT3](https://platform.openai.com/account/api-keys) 接口，使用 [ChatGPT Client](https://github.com/go-zoox/chatgpt-client)
+* 支持 [本地环境](https://dashboard.cpolar.com/login)、[Docker](https://www.docker.com/) 多种渠道部署
+
 
 ## 部署方案
 
