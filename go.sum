@@ -17,8 +17,8 @@ github.com/go-playground/validator/v10 v10.4.1/go.mod h1:nlOn6nFhuKACm19sB/8EGNn
 github.com/go-playground/validator/v10 v10.11.0 h1:0W+xRM511GY47Yy3bZUbJVitCNg2BOGlCyvTqsp/xIw=
 github.com/go-zoox/chalk v1.0.2 h1:DCWft37fogmvqF37JdbGSLg28L/tQeA8u0lMvb62KOg=
 github.com/go-zoox/chalk v1.0.2/go.mod h1:z5+qvE9nEJI5uT4px2tyoFa/xxkqf3CUo22KmXLKbNI=
-github.com/go-zoox/chatbot-wechat v0.0.1 h1:cWQ+2wsvraiXFxYfgnzYAeIRptjW7JhvSDkJ2jSVpUc=
-github.com/go-zoox/chatbot-wechat v0.0.1/go.mod h1:5vctbs+5haHKAs5wo4YuKmqxDyYA9yxRwLHk+0l4GwU=
+github.com/go-zoox/chatbot-wechat v0.0.2 h1:04Pqa0kxMSB/0mHo5nBpmUA1JCI5EuyaIEaeQ+wZeXg=
+github.com/go-zoox/chatbot-wechat v0.0.2/go.mod h1:5vctbs+5haHKAs5wo4YuKmqxDyYA9yxRwLHk+0l4GwU=
 github.com/go-zoox/chatgpt-client v1.2.0 h1:fMvMtYxYqyi7r1/itNSjQCxeLxkLfxIKQ28TSc9VbTk=
 github.com/go-zoox/chatgpt-client v1.2.0/go.mod h1:aEPU6QmL7e9J+j4Mu5QvfUTq3gb9lhAWWes1oFBu2A0=
 github.com/go-zoox/cli v1.0.10 h1:guifbeAJHjhW6m5P+CXQ3ubVO0dqIEq/jhArNUC0930=
