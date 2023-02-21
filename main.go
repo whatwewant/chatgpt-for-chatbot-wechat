@@ -21,6 +21,11 @@ func main() {
 				Usage:   "The admin nickname for advanced commands",
 				EnvVars: []string{"ADMIN_NICKNAME"},
 			},
+			&cli.StringFlag{
+				Name:    "report-url",
+				Usage:   "Report URL for send qrcode url",
+				EnvVars: []string{"REPORT_URL"},
+			},
 		},
 	})
 
@@ -28,6 +33,7 @@ func main() {
 		return ServeWechatBot(&FeishuBotConfig{
 			ChatGPTAPIKey: ctx.String("chatgpt-api-key"),
 			AdminNickname: ctx.String("admin-nickname"),
+			ReportURL:     ctx.String("report-url"),
 		})
 	})
 
