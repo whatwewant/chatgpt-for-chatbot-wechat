@@ -3,10 +3,10 @@ module github.com/go-zoox/chatgpt-for-chatbot-wechat
 go 1.20
 
 require (
-	github.com/eatmoreapple/openwechat v1.4.0
-	github.com/go-zoox/chatgpt-client v1.0.9
+	github.com/go-zoox/chatbot-wechat v0.0.6
+	github.com/go-zoox/chatgpt-client v1.2.6
 	github.com/go-zoox/cli v1.2.0
-	github.com/go-zoox/core-utils v1.2.6
+	github.com/go-zoox/core-utils v1.2.7
 	github.com/go-zoox/debug v1.0.1
 	github.com/go-zoox/logger v1.4.0
 	github.com/go-zoox/retry v1.0.3
@@ -14,17 +14,19 @@ require (
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
+	github.com/eatmoreapple/openwechat v1.4.1 // indirect
 	github.com/fatih/color v1.14.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/go-zoox/chalk v1.0.1 // indirect
+	github.com/go-zoox/chalk v1.0.2 // indirect
 	github.com/go-zoox/datetime v1.1.1 // indirect
 	github.com/go-zoox/dotenv v1.2.3 // indirect
 	github.com/go-zoox/errors v1.0.2 // indirect
+	github.com/go-zoox/feishu v1.3.4 // indirect
 	github.com/go-zoox/fetch v1.7.4 // indirect
 	github.com/go-zoox/fs v1.3.7 // indirect
 	github.com/go-zoox/headers v1.0.5 // indirect
 	github.com/go-zoox/lru v1.0.1 // indirect
-	github.com/go-zoox/openai-client v1.0.4 // indirect
+	github.com/go-zoox/openai-client v1.0.5 // indirect
 	github.com/go-zoox/safe v1.0.0 // indirect
 	github.com/go-zoox/tag v1.2.0 // indirect
 	github.com/go-zoox/uuid v0.0.1 // indirect

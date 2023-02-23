@@ -4,13 +4,12 @@ import (
 	gstrings "strings"
 	"time"
 
+	"github.com/go-zoox/chatbot-wechat"
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/core-utils/strings"
 	"github.com/go-zoox/debug"
 	"github.com/go-zoox/logger"
 	"github.com/go-zoox/retry"
-
-	"github.com/eatmoreapple/openwechat"
 
 	chatgpt "github.com/go-zoox/chatgpt-client"
 )
@@ -18,11 +17,17 @@ import (
 type FeishuBotConfig struct {
 	ChatGPTAPIKey string
 	AdminNickname string
+	ReportURL     string
 }
 
 func ServeWechatBot(cfg *FeishuBotConfig) (err error) {
-	isInSerice := true
-	var admin *openwechat.Friend
+	bot, err := chatbot.New(&chatbot.Config{
+		AdminNickname: cfg.AdminNickname,
+		ReprtURL:      cfg.ReportURL,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create wechat chatbot: %v", err)
+	}
 
 	client, err := chatgpt.New(&chatgpt.Config{
 		APIKey: cfg.ChatGPTAPIKey,
@@ -31,49 +36,63 @@ func ServeWechatBot(cfg *FeishuBotConfig) (err error) {
 		return fmt.Errorf("failed to create chatgpt client: %v", err)
 	}
 
-	bot := openwechat.DefaultBot(openwechat.Desktop) // 桌面模式，上面登录不上的可以尝试切换这种模式
+	bot.OnOffline(func(request *chatbot.EventRequest, reply func(content string, msgType ...string) error) error {
+		return reply("休息中 ...")
+	})
 
-	var self *openwechat.Self
+	bot.OnCommand("醒来", &chatbot.Command{
+		Handler: func(args []string, request *chatbot.EventRequest, reply chatbot.MessageReply) error {
+			if err := bot.SetOnline(); err != nil {
+				return err
+			}
 
-	bot.MessageHandler = func(msg *openwechat.Message) {
-		// exit if not a text message
-		if !msg.IsText() {
+			return reply("醒啦")
+		},
+	})
+
+	bot.OnCommand("去睡觉", &chatbot.Command{
+		Handler: func(args []string, request *chatbot.EventRequest, reply chatbot.MessageReply) error {
+			if err := bot.SetOffline(); err != nil {
+				return err
+			}
+
+			return reply("睡啦")
+		},
+	})
+
+	bot.OnCommand("半小时后下线", &chatbot.Command{
+		Handler: func(args []string, request *chatbot.EventRequest, reply chatbot.MessageReply) error {
+			go func() {
+				time.Sleep(30 * time.Minute)
+				if err := bot.SetOffline(); err != nil {
+					logger.Errorf("failed to set offline: %v", err)
+				}
+
+				reply("睡啦")
+			}()
+
+			return reply("好的，服务将在半小时后下线")
+		},
+	})
+
+	bot.OnCommand("重置", &chatbot.Command{
+		Handler: func(args []string, request *chatbot.EventRequest, reply chatbot.MessageReply) error {
+			if err := client.ResetConversations(); err != nil {
+				reply("重置失败")
+				return err
+			}
+
+			return reply("重置完成")
+		},
+	})
+
+	bot.OnMessage(func(content string, msg *chatbot.EventRequest, reply chatbot.MessageReply) (err error) {
+		if !msg.IsAt() {
 			return
 		}
 
-		isAdmin := func() bool {
-			return !msg.IsSendByGroup() && admin != nil && msg.FromUserName == admin.UserName
-		}
-
-		// ADMIN
-		if isAdmin() {
-			command := msg.Content
-			// command
-			switch command {
-			case "service::stop", "stop", "休息", "下线", "去睡觉吧":
-				isInSerice = false
-				msg.ReplyText("服务已下线")
-				return
-			case "service::start", "start", "启动", "上线", "快醒来":
-				isInSerice = true
-				msg.ReplyText("服务上线")
-				return
-			case "半小时后下线":
-				msg.ReplyText("好的，服务将在半小时后下线")
-				go func(msg *openwechat.Message) {
-					time.Sleep(30 * time.Minute)
-					isInSerice = false
-					msg.ReplyText("服务已下线")
-				}(msg)
-				return
-			}
-		}
-
-		if debug.IsDebugMode() {
-			fmt.PrintJSON(msg)
-		}
-
-		if !msg.IsAt() {
+		self, err := bot.Info()
+		if err != nil {
 			return
 		}
 
@@ -83,11 +102,6 @@ func ServeWechatBot(cfg *FeishuBotConfig) (err error) {
 
 		// 注意，这里有不可见字符出现
 		if !strings.StartsWith(msg.Content, fmt.Sprintf("@%s", self.NickName)) {
-			return
-		}
-
-		if !isInSerice {
-			msg.ReplyText("休息中 ...")
 			return
 		}
 
@@ -108,7 +122,6 @@ func ServeWechatBot(cfg *FeishuBotConfig) (err error) {
 		}
 
 		logger.Infof("问：%s", question)
-		var err error
 
 		var answer []byte
 		err = retry.Retry(func() error {
@@ -132,9 +145,10 @@ func ServeWechatBot(cfg *FeishuBotConfig) (err error) {
 		if err != nil {
 			logger.Errorf("failed to get answer: %v", err)
 
-			if _, err := msg.ReplyText("ChatGPT 繁忙，请稍后重试"); err != nil {
-				return
+			if err := reply("ChatGPT 繁忙，请稍后重试"); err != nil {
+				return err
 			}
+
 			return
 		}
 
@@ -145,36 +159,8 @@ func ServeWechatBot(cfg *FeishuBotConfig) (err error) {
 			answerX = fmt.Sprintf("%s\n-------------\n%s", question, answer)
 		}
 
-		msg.ReplyText(answerX)
-	}
-
-	// 注册登陆二维码回调
-	bot.UUIDCallback = openwechat.PrintlnQrcodeUrl
-
-	// 登陆
-	if err := bot.Login(); err != nil {
-		return fmt.Errorf("failed to login: %v", err)
-	}
-
-	// 获取登陆的用户
-	self, err = bot.GetCurrentUser()
-	if err != nil {
-		return fmt.Errorf("failed to get current user: %v", err)
-	}
-
-	if cfg.AdminNickname != "" {
-		friends, err := self.Friends()
-		if err != nil {
-			return fmt.Errorf("failed to list friends: %v", err)
-		}
-		admin = friends.GetByNickName(cfg.AdminNickname)
-	}
-
-	fmt.PrintJSON(map[string]any{
-		"cfg":   cfg,
-		"bot":   self,
-		"admin": admin,
+		return reply(answerX)
 	})
 
-	return bot.Block()
+	return bot.Run()
 }
