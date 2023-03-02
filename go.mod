@@ -4,11 +4,11 @@ go 1.20
 
 require (
 	github.com/go-zoox/chatbot-wechat v0.0.7
-	github.com/go-zoox/chatgpt-client v1.2.6
+	github.com/go-zoox/chatgpt-client v1.3.1
 	github.com/go-zoox/cli v1.2.0
 	github.com/go-zoox/core-utils v1.2.7
 	github.com/go-zoox/debug v1.0.1
-	github.com/go-zoox/logger v1.4.0
+	github.com/go-zoox/logger v1.4.4
 	github.com/go-zoox/retry v1.0.3
 )
 
@@ -26,7 +26,7 @@ require (
 	github.com/go-zoox/fs v1.3.7 // indirect
 	github.com/go-zoox/headers v1.0.5 // indirect
 	github.com/go-zoox/lru v1.0.1 // indirect
-	github.com/go-zoox/openai-client v1.0.5 // indirect
+	github.com/go-zoox/openai-client v1.2.0 // indirect
 	github.com/go-zoox/safe v1.0.0 // indirect
 	github.com/go-zoox/tag v1.2.0 // indirect
 	github.com/go-zoox/uuid v0.0.1 // indirect
